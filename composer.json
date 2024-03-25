@@ -1,0 +1,22 @@
+{
+    "name": "n0n0n0f/pop-it-mvc",
+    "description": "\"Simple mvc freamework\"",
+    "type": "project",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "n0n0n0f",
+            "email": "r4sl3xgod@gmail.com"
+        }
+    ],
+    "minimum-stability": "dev",
+    "require": {
+        "php": "^7.4 | ^8.0"
+    },
+    "autoload": {
+        "psr-4": {
+            "Src\\": "core/Src/",
+            "": "app/"
+        }
+    }
+}
