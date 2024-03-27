@@ -12,6 +12,7 @@ use Src\Traits\SingletonTrait;
 
 class Route
 {
+    
    //Используем методы трейта
    use SingletonTrait;
 
@@ -33,6 +34,7 @@ class Route
        self::single()->currentRoute = $route;
        return self::single();
    }
+   
 
    //Добавляет префикс для обозначенных маршрутов
    public static function group(string $prefix, callable $callback): void
