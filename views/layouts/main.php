@@ -29,6 +29,9 @@
                            <a class="nav-link" href="<?= app()->route->getUrl('/logout') ?>">Выход (<?= app()->auth::user()->name ?>)</a>
                        </li>
                    <?php endif; ?>
+                   <li class="nav-item">
+                           <a class="nav-link" href="<?= app()->route->getUrl('/login') ?>">Меню</a>
+                       </li>
                </ul>
            </div>
        </div>
