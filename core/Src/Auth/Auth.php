@@ -17,6 +17,7 @@ class Auth
            self::login(self::user());
        }
    }
+   
 
    //Вход пользователя по модели
    public static function login(IdentityInterface $user): void
@@ -56,6 +57,12 @@ class Auth
    {
        Session::clear('id');
        return true;
+   }
+
+   public static function checkAdmin(): bool
+   {
+       $user = self::user();
+       return $user && $user->role === 'administrator';
    }
 
 }

@@ -50,6 +50,11 @@ class Site
         Auth::logout();
         app()->route->redirect('/hello');
     }
+
+    public function add_functions(): string
+    {
+            return new View('site.add_functions');   
+    }
 }
 
 
