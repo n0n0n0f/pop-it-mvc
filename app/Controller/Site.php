@@ -75,6 +75,18 @@ class Site
     {
             return new View('site.add_functions');   
     }
+    public function attach_abonent(Request $request): string{
+        return new View('site.attach_abonent');
+    }
+    public function select_numbers(Request $request): string{
+        return new View('site.select_numbers');
+    }
+    public function select_all_numbers(Request $request): string{
+        return new View('site.select_all_numbers');
+    }
+    public function count_abonents(Request $request): string{
+        return new View('site.count_abonents');
+    }
 }
 
 
