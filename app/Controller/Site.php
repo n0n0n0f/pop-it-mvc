@@ -5,6 +5,10 @@ namespace Controller;
 use Model\Post;
 use Src\View;
 use Src\Request;
+use Model\Division;
+use Model\Phone;
+use Model\Room;
+use Model\Subscriber;
 use Model\User;
 use Src\Auth\Auth;
 use Src\Validator\Validator;
@@ -53,15 +57,15 @@ class Site
  
    public function login(Request $request): string
    {
-        //Если просто обращение к странице, то отобразить форму
+      
         if ($request->method === 'GET') {
             return new View('site.login');
         }
-        //Если удалось аутентифицировать пользователя, то редирект
+     
         if (Auth::attempt($request->all())) {
             app()->route->redirect('/hello');
         }
-        //Если аутентификация не удалась, то сообщение об ошибке
+        
         return new View('site.login', ['message' => 'Неправильные логин или пароль']);
     }
 
@@ -75,18 +79,202 @@ class Site
     {
             return new View('site.add_functions');   
     }
-    public function attach_abonent(Request $request): string{
-        return new View('site.attach_abonent');
+    public function select_numbers(Request $request): string
+    {
+        $divisions = Division::all();
+        $subscribers = [];
+        $phonesBySubscriber = [];
+    
+     
+        if ($request->method === 'POST') {
+            $divisionId = $_POST['division_id'] ?? null;
+    
+           
+            if (!empty($divisionId)) {
+             
+                $rooms = Room::where('division_id', $divisionId)->pluck('room_id');
+    
+              
+                $phones = Phone::whereIn('room_id', $rooms)->get();
+    
+                foreach ($phones as $phone) {
+                    $phonesBySubscriber[$phone->subscriber_id][] = $phone->phone_number;
+                }
+    
+                $subscribers = Subscriber::whereIn('subscriber_id', array_keys($phonesBySubscriber))->get();
+            }
+        }
+    
+        return new View('site.select_numbers', ['divisions' => $divisions, 'subscribers' => $subscribers, 'phonesBySubscriber' => $phonesBySubscriber]);
     }
-    public function select_numbers(Request $request): string{
-        return new View('site.select_numbers');
+    
+    
+    
+    
+    
+    public function select_all_numbers(Request $request): string {
+  
+        if ($request->method === 'POST') {
+         
+            $validator = new Validator($request->all(), [
+                'subscriber_id' => ['required', 'numeric'], 
+            ], [
+                'required' => 'Поле :field пусто',
+                'numeric' => 'Значение поля :field должно быть числом',
+            ]);
+    
+           
+            if ($validator->fails()) {
+                return new View('site.select_all_numbers', ['message' => json_encode($validator->errors(), JSON_UNESCAPED_UNICODE)]);
+            }
+    
+         
+            $subscriberId = $request->subscriber_id;
+            $selectedSubscriber = Subscriber::with('phones')->find($subscriberId);
+    
+           
+            return new View('site.select_all_numbers', ['selectedSubscriber' => $selectedSubscriber]);
+        }
+    
+        
+        return app()->route->redirect('/select_all_numbers');
     }
-    public function select_all_numbers(Request $request): string{
-        return new View('site.select_all_numbers');
-    }
+    
+    
     public function count_abonents(Request $request): string{
         return new View('site.count_abonents');
     }
+    
+    
+    public function subscriber(Request $request): string
+    {
+        $divisions = Division::all();
+    
+        if ($request->method === 'POST') { 
+            $validator = new Validator($request->all(), [
+                'name' => ['required'],
+                'lastname' => ['required'],
+                'patronymic' => ['required'],
+                'division_id' => ['required'],
+                'birthday' => ['required'],
+            ], [
+                'required' => 'Поле :field пусто',
+            ]);
+    
+            if ($validator->fails()) {
+                return new View('site.subscriber', ['divisions' => $divisions, 'message' => json_encode($validator->errors(), JSON_UNESCAPED_UNICODE)]);
+            }
+    
+            $data = $request->all();
+    
+            // Create new subscriber
+            Subscriber::create($data);
+            
+            app()->route->redirect('/subscriber');
+        }
+    
+        return new View('site.subscriber', ['divisions' => $divisions]);
+    }
+    
+    public function phone(Request $request): string
+    {
+        $phones = Phone::all();
+        $rooms = Room::all(); 
+        $subscribers = Subscriber::all(); 
+    
+        if ($request->method === 'POST') {
+            $validator = new Validator($request->all(), [
+                'phone_number' => ['required'],
+                'room_id' => ['required'],
+                'subscriber_id' => ['required'], 
+            ], [
+                'required' => 'Поле :field пусто',
+            ]);
+    
+            if($validator->fails()){
+                return new View('site.phone', ['message' => json_encode($validator->errors(), JSON_UNESCAPED_UNICODE), 'subscribers' => $subscribers]);
+            }
+    
+            if (Phone::create($request->all())) {
+                app()->route->redirect('/phone');
+            }
+        }
+    
+        return new View('site.phone', ['phones' => $phones, 'rooms' => $rooms, 'subscribers' => $subscribers]); 
+    }
+    
+    
+
+
+    
+public function room(Request $request): string
+{
+    $rooms = Room::all();
+    $divisions = Division::all();
+
+    if ($request->method === 'POST') {
+        $validator = new Validator($request->all(), [
+            'number_room' => ['required'],
+            'view_room' => ['required'],
+            'division_id' => ['required'],   
+            'image' => ['required'],        
+        ], [
+            'required' => 'Поле :field пусто',
+        ]);
+        
+
+        if($validator->fails()){
+            return new View('site.room', ['message' => json_encode($validator->errors(), JSON_UNESCAPED_UNICODE)]);
+        }
+
+        if($_FILES['image']){
+            $image = $_FILES['image'];
+            $root = app()->settings->getRootPath();
+            $path = $_SERVER['DOCUMENT_ROOT'] . $root . '/public/image/';
+            $name = mt_rand(0, 10000).$image['name'];
+            move_uploaded_file($image['tmp_name'], $path . $name);
+            $building_data = $request->all();
+            $building_data['image'] = $name;
+            if(Room::create($building_data)){
+                app()->route->redirect('/room');
+            }
+        } else{
+            if(Room::create($request->all())){
+                app()->route->redirect('/room');
+            }
+        }
+    }
+
+    return new View('site.room', ['rooms' => $rooms, 'divisions' => $divisions]); 
+}
+
+
+public function division(Request $request): string
+{
+    $divisions = Division::all();
+
+    if ($request->method === 'POST') {
+        $validator = new Validator($request->all(), [
+            'name_division' => ['required'],
+            'view_division' => ['required'],          
+        ], [
+            'required' => 'Поле :field пусто',
+        ]);
+
+        if($validator->fails()){
+            return new View('site.division', ['message' => json_encode($validator->errors(), JSON_UNESCAPED_UNICODE)]);
+        }
+
+        if (Division::create($request->all())) {
+            app()->route->redirect('/division');
+        }
+    }
+
+    return new View('site.division', ['divisions' => $divisions]); 
+}
+
+
+
 }
 
 

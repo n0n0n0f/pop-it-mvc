@@ -10,14 +10,6 @@
 <body>
     <div class="container">
         <h2 class="mt-5">Функции Системного Администратора</h2>
-        <div class="row mt-3">
-            <div class="col-md-6">
-                <h3>Прикрепить к номеру телефона</h3>
-                <form method="get" action="<?= app()->route->getUrl('/attach_abonent') ?>">
-    <button type="submit" class="btn btn-primary">Функции</button>
-</form>
-
-            </div>
         </div>
         <div class="row mt-3">
             <div class="col-md-6">
