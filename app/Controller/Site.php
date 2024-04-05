@@ -20,6 +20,7 @@ class Site
     {
        $posts = Post::where('id', $request->id)->get();
        return (new View())->render('site.post', ['posts' => $posts]);
+       
     }
     
 
