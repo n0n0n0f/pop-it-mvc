@@ -2,15 +2,14 @@
 
 namespace Validators;
 
-use Src\Validator\AbstractValidator;
+use Validators\AbstractValidator;
 
 class RequireValidator extends AbstractValidator
 {
+    protected string $message = 'Поле :field обязательно для заполнения';
 
-   protected string $message = 'Field :field is required';
-
-   public function rule(): bool
-   {
-       return !empty($this->value);
-   }
+    public function rule(): bool
+    {
+        return !empty($this->value);
+    }
 }
