@@ -32,4 +32,7 @@ abstract class AbstractValidator
         return $message;
     }
     abstract public function rule(): bool;
+
+    
 }
+

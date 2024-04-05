@@ -8,9 +8,15 @@ class Validator
     private array $fields = [];
     private array $rules = [];
     private array $messages = [];
+
     public function __construct(array $fields, array $rules, array $messages = [])
     {
-        $this->validators = app()->settings->app['validators'] ?? [];
+        $this->validators = [
+            'required' => 'Validators\RequireValidator',
+            'unique' => 'Validators\UniqueValidator',
+            'min_length' => 'Validators\MinLengthValidator', 
+         
+        ];
         $this->fields = $fields;
         $this->rules = $rules;
         $this->messages = $messages;
