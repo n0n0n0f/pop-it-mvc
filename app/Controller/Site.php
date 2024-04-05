@@ -197,17 +197,15 @@ class Site
     
         return new View('site.subscriber', ['divisions' => $divisions]);
     }
-    
+
     public function phone(Request $request): string
     {
         $phones = Phone::all();
         $rooms = Room::all(); 
         $subscribers = Subscriber::all(); 
     
-
         $searchQuery = isset($_POST['search_query']) ? $_POST['search_query'] : null;
     
-  
         if ($searchQuery) {
             $subscribers = Subscriber::where('name', 'like', "%$searchQuery%")
                 ->orWhere('lastname', 'like', "%$searchQuery%")
@@ -223,11 +221,14 @@ class Site
                 'required' => 'Поле :field пусто',
             ]);
     
-            if($validator->fails()){
-                return new View('site.phone', ['message' => json_encode($validator->errors(), JSON_UNESCAPED_UNICODE), 'subscribers' => $subscribers, 'search_query' => $searchQuery]);
+            if ($validator->fails()) {
+                return new View('site.phone', [
+                    'message' => json_encode($validator->errors(), JSON_UNESCAPED_UNICODE),
+                    'subscribers' => $subscribers,
+                    'search_query' => $searchQuery
+                ]);
             }
     
-   
             $phone = new Phone();
             $phone->phone_number = $_POST['phone_number'];
             $phone->room_id = $_POST['room_id'];
@@ -237,8 +238,14 @@ class Site
             app()->route->redirect('/phone');
         }
     
-        return new View('site.phone', ['phones' => $phones, 'rooms' => $rooms, 'subscribers' => $subscribers, 'search_query' => $searchQuery]); 
+        return new View('site.phone', [
+            'phones' => $phones,
+            'rooms' => $rooms,
+            'subscribers' => $subscribers,
+            'search_query' => $searchQuery
+        ]); 
     }
+    
     
     
     
