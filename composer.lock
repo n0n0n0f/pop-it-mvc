@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "a5cef54a6e8309dabc7acf5513bc9c4c",
+    "content-hash": "c0f8676719b591c05789be1e3a2aa77c",
     "packages": [
         {
             "name": "brick/math",
@@ -780,6 +780,94 @@
                 "source": "https://github.com/laravel/framework"
             },
             "time": "2024-03-21T13:25:12+00:00"
+        },
+        {
+            "name": "n0n0n0f/collect",
+            "version": "dev-master",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/n0n0n0f/collect.git",
+                "reference": "8a8081c6605fbe878588032aa8be72270f6e56a7"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/n0n0n0f/collect/zipball/8a8081c6605fbe878588032aa8be72270f6e56a7",
+                "reference": "8a8081c6605fbe878588032aa8be72270f6e56a7",
+                "shasum": ""
+            },
+            "require": {
+                "php": "^7.4 | ^8.0"
+            },
+            "default-branch": true,
+            "type": "library",
+            "autoload": {
+                "files": [
+                    "src/helpers.php"
+                ],
+                "psr-4": {
+                    "Collect\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "n0n0n0f",
+                    "email": "r4sl3xgod@gmail.com"
+                }
+            ],
+            "description": "Module for working with arrays ",
+            "support": {
+                "issues": "https://github.com/n0n0n0f/collect/issues",
+                "source": "https://github.com/n0n0n0f/collect/tree/master"
+            },
+            "time": "2024-04-05T22:23:38+00:00"
+        },
+        {
+            "name": "n0n0n0f/collect1",
+            "version": "dev-main",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/n0n0n0f/collect1.git",
+                "reference": "d669e5d8cbd08768ae4c34a44910b987d1ea19b7"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/n0n0n0f/collect1/zipball/d669e5d8cbd08768ae4c34a44910b987d1ea19b7",
+                "reference": "d669e5d8cbd08768ae4c34a44910b987d1ea19b7",
+                "shasum": ""
+            },
+            "require": {
+                "php": "^7.4 | ^8.0"
+            },
+            "default-branch": true,
+            "type": "project",
+            "autoload": {
+                "files": [
+                    "src/Middleware.php"
+                ],
+                "psr-4": {
+                    "Collect\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "n0n0n0f",
+                    "email": "r4sl3xgod@gmail.com"
+                }
+            ],
+            "description": "my new collect packet for pr",
+            "support": {
+                "issues": "https://github.com/n0n0n0f/collect1/issues",
+                "source": "https://github.com/n0n0n0f/collect1/tree/main"
+            },
+            "time": "2024-04-05T23:07:45+00:00"
         },
         {
             "name": "nesbot/carbon",
@@ -1673,7 +1761,10 @@
     "minimum-stability": "dev",
     "stability-flags": {
         "illuminate/database": 20,
-        "illuminate/events": 20
+        "illuminate/events": 20,
+        "nikic/fast-route": 20,
+        "n0n0n0f/collect": 20,
+        "n0n0n0f/collect1": 20
     },
     "prefer-stable": false,
     "prefer-lowest": false,
