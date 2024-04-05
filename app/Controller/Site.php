@@ -140,10 +140,32 @@ class Site
         return app()->route->redirect('/select_all_numbers');
     }
     
+    public function count_abonents(Request $request): string
+    {
+        $divisions = Division::all();
+        $rooms = Room::all();
+        $result = [];
     
-    public function count_abonents(Request $request): string{
-        return new View('site.count_abonents');
+        if ($request->method === 'POST') {
+            $divisionId = $_POST['division_id'] ?? null;
+            $roomId = $_POST['room_id'] ?? null;
+    
+            if (!empty($divisionId)) {
+                $result['division'] = Division::find($divisionId)->name_division;
+                $result['division_count'] = Subscriber::where('division_id', $divisionId)->count();
+            }
+    
+            if (!empty($roomId)) {
+                $result['room'] = Room::find($roomId)->number_room;
+                $result['room_count'] = Subscriber::whereHas('phones', function ($query) use ($roomId) {
+                    $query->where('room_id', $roomId);
+                })->count();
+            }
+        }
+    
+        return new View('site.count_abonents', ['divisions' => $divisions, 'rooms' => $rooms, 'result' => $result]);
     }
+    
     
     
     public function subscriber(Request $request): string
@@ -167,7 +189,7 @@ class Site
     
             $data = $request->all();
     
-            // Create new subscriber
+          
             Subscriber::create($data);
             
             app()->route->redirect('/subscriber');
@@ -182,8 +204,18 @@ class Site
         $rooms = Room::all(); 
         $subscribers = Subscriber::all(); 
     
-        if ($request->method === 'POST') {
-            $validator = new Validator($request->all(), [
+
+        $searchQuery = isset($_POST['search_query']) ? $_POST['search_query'] : null;
+    
+  
+        if ($searchQuery) {
+            $subscribers = Subscriber::where('name', 'like', "%$searchQuery%")
+                ->orWhere('lastname', 'like', "%$searchQuery%")
+                ->get();
+        }
+    
+        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+            $validator = new Validator($_POST, [
                 'phone_number' => ['required'],
                 'room_id' => ['required'],
                 'subscriber_id' => ['required'], 
@@ -192,16 +224,23 @@ class Site
             ]);
     
             if($validator->fails()){
-                return new View('site.phone', ['message' => json_encode($validator->errors(), JSON_UNESCAPED_UNICODE), 'subscribers' => $subscribers]);
+                return new View('site.phone', ['message' => json_encode($validator->errors(), JSON_UNESCAPED_UNICODE), 'subscribers' => $subscribers, 'search_query' => $searchQuery]);
             }
     
-            if (Phone::create($request->all())) {
-                app()->route->redirect('/phone');
-            }
+   
+            $phone = new Phone();
+            $phone->phone_number = $_POST['phone_number'];
+            $phone->room_id = $_POST['room_id'];
+            $phone->subscriber_id = $_POST['subscriber_id'];
+            $phone->save();
+    
+            app()->route->redirect('/phone');
         }
     
-        return new View('site.phone', ['phones' => $phones, 'rooms' => $rooms, 'subscribers' => $subscribers]); 
+        return new View('site.phone', ['phones' => $phones, 'rooms' => $rooms, 'subscribers' => $subscribers, 'search_query' => $searchQuery]); 
     }
+    
+    
     
     
 

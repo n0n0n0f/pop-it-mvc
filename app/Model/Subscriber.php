@@ -24,6 +24,8 @@ class Subscriber extends Model
     {
         return $this->hasMany(Phone::class, 'subscriber_id', 'subscriber_id');
     }
+
+    
 }
 
 

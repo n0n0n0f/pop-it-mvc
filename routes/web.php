@@ -10,7 +10,8 @@ Route::add('GET', '/add_functions', [Controller\Site::class, 'add_functions'])->
 
 Route::add(['GET', 'POST'], '/select_numbers', [Controller\Site::class, 'select_numbers']);
 Route::add(['GET', 'POST'], '/select_all_numbers', [Controller\Site::class, 'select_all_numbers'])->middleware('auth');
-Route::add('GET', '/count_abonents', [Controller\Site::class, 'count_abonents']);
+Route::add(['GET', 'POST'], '/count_abonents', [Controller\Site::class, 'count_abonents']);
+
 
 
 Route::add(['GET', 'POST'], '/subscriber', [Controller\Site::class, 'subscriber'])->middleware('auth');;
