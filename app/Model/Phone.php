@@ -16,7 +16,10 @@ class Phone extends Model
     ];
     
     
-
+    public function subscriber()
+    {
+        return $this->belongsTo(Subscriber::class, 'subscriber_id', 'subscriber_id');
+    }
     
     
 

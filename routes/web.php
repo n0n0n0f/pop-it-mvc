@@ -9,7 +9,7 @@ Route::add('GET', '/logout', [Controller\Site::class, 'logout']);
 Route::add('GET', '/add_functions', [Controller\Site::class, 'add_functions'])->middleware('auth');
 
 Route::add(['GET', 'POST'], '/select_numbers', [Controller\Site::class, 'select_numbers']);
-Route::add(['GET', 'POST'], '/select_all_numbers', [Controller\Site::class, 'select_all_numbers'])->middleware('auth');
+Route::add(['GET', 'POST'], '/select_all_numbers', [Controller\Site::class, 'select_all_numbers']);
 Route::add(['GET', 'POST'], '/count_abonents', [Controller\Site::class, 'count_abonents']);
 
 

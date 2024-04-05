@@ -79,6 +79,29 @@ class Site
     {
             return new View('site.add_functions');   
     }
+   
+    public function select_all_numbers(Request $request): string
+{
+    $subscribers = Subscriber::all();
+    $phonesBySubscriber = [];
+
+    if ($request->method === 'POST') {
+        $subscriberId = $_POST['subscriber_id'] ?? null;
+
+        if (!empty($subscriberId)) {
+            $phones = Phone::where('subscriber_id', $subscriberId)->get();
+
+            foreach ($phones as $phone) {
+                $phonesBySubscriber[$phone->subscriber_id][] = $phone->phone_number;
+            }
+        }
+    }
+
+    return new View('site.select_all_numbers', ['subscribers' => $subscribers, 'phonesBySubscriber' => $phonesBySubscriber]);
+}
+
+    
+   
     public function select_numbers(Request $request): string
     {
         $divisions = Division::all();
@@ -106,38 +129,6 @@ class Site
         }
     
         return new View('site.select_numbers', ['divisions' => $divisions, 'subscribers' => $subscribers, 'phonesBySubscriber' => $phonesBySubscriber]);
-    }
-    
-    
-    
-    
-    
-    public function select_all_numbers(Request $request): string {
-  
-        if ($request->method === 'POST') {
-         
-            $validator = new Validator($request->all(), [
-                'subscriber_id' => ['required', 'numeric'], 
-            ], [
-                'required' => 'Поле :field пусто',
-                'numeric' => 'Значение поля :field должно быть числом',
-            ]);
-    
-           
-            if ($validator->fails()) {
-                return new View('site.select_all_numbers', ['message' => json_encode($validator->errors(), JSON_UNESCAPED_UNICODE)]);
-            }
-    
-         
-            $subscriberId = $request->subscriber_id;
-            $selectedSubscriber = Subscriber::with('phones')->find($subscriberId);
-    
-           
-            return new View('site.select_all_numbers', ['selectedSubscriber' => $selectedSubscriber]);
-        }
-    
-        
-        return app()->route->redirect('/select_all_numbers');
     }
     
     public function count_abonents(Request $request): string
