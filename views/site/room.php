@@ -6,7 +6,7 @@
         <h4 class="form-addition-title"><?= $message ?? ''; ?></h4>
         <input class="input" type="text" name="number_room" placeholder="Номер помещения">
         <input class="input" type="text" name="view_room" placeholder="Вид помещения">
-        <input type="hidden" name="room_id" value="...">
+        <input type="hidden" name="room_id">
         <select name="division_id">
             <?php
             foreach ($divisions as $division) {
